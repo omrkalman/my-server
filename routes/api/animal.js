@@ -3,7 +3,7 @@ const router = express.Router();
 
 const animalModel = require("../../model/animal");
 const onAnimal = require("../../validation/onAnimal");
-const ResponseError = require("../../utility/ResponseError");
+const ResponseError = require("../../module/ResponseError");
 
 // const mammal = [
 //   { species: "dog", age: "15" },

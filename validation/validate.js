@@ -1,4 +1,4 @@
-const ResponseError = require("../utility/ResponseError");
+const ResponseError = require("../module/ResponseError");
 const validateSchema = (userInput, schema) => {
     const promise = new Promise((res,rej)=>{
         schema.validateAsync(userInput, { abortEarly:false })
