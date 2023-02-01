@@ -1,0 +1,170 @@
+<html>
+  <head>
+    <title>Express</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+  </head>
+
+  <body>
+    <h1>Express</h1>
+    <p>Welcome to Express</p>
+    <div
+      class="formDiv"
+      id="animal"
+    >
+      <h2>Animal</h2>
+      <div>
+        <label for="species">Species: </label>
+        <input id="species" type="text" />
+      </div>
+      <div>
+        <label for="mass">Mass (kg): </label>
+        <input id="mass" type="number" />
+      </div>
+      <button onclick="getAnimal()">GET</button>
+      <button onclick="createAnimal()">POST</button>
+    </div>
+    <textarea id="displayAnimal"></textarea>
+    <div
+      class="formDiv"
+      id="child"
+    >
+      <h2>Child</h2>
+      <div>
+        <label for="index">Index: </label>
+        <input id="index" type="number" />
+      </div>
+      <div>
+        <label for="olderThanCheckbox"
+          >I want to see all children older than a certain age:
+        </label>
+        <input
+          id="olderThanCheckbox"
+          type="checkbox"
+          onchange="toggleChildMode(event)"
+        />
+      </div>
+      <div>
+        <label for="age">Age: </label>
+        <input disabled id="age" type="number" />
+      </div>
+      <div>
+        <label for="gender">Gender: </label>
+        <select disabled id="gender">
+          <option value="">Any</option>
+          <option value="m">Male</option>
+          <option value="f">Female</option>
+        </select>
+      </div>
+      <button onclick="getChild()">GET</button>
+    </div>
+    <textarea id="displayChild"></textarea>
+    <div
+      class="formDiv"
+      id="character"
+    >
+      <h2>Character</h2>
+      <div>
+        <label for="id">ID: </label>
+        <input id="id" type="number" />
+      </div>
+      <button onclick="getCharacter()">GET</button>
+    </div>
+    <div class="resultsDiv" id="displayCharacter"></div>
+
+    <script>
+      function toggleChildMode(event) {
+        let index = document.getElementById("index");
+        let age = document.getElementById("age");
+        let gender = document.getElementById("gender");
+
+        const check = event.currentTarget;
+        index.disabled = check.checked;
+        index.value = "";
+        age.disabled = !check.checked;
+        age.value = "";
+        gender.disabled = !check.checked;
+        gender.value = "";
+      }
+
+      async function getAnimal() {
+        let species = document.getElementById("species").value;
+        let mass = document.getElementById("mass").value;
+        try {
+          let { data } = await axios.get(
+            "http://localhost:3000/api/animal/?species=" +
+              species +
+              "&mass=" +
+              mass
+          );
+          document.getElementById("displayAnimal").innerText =
+            JSON.stringify(data);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+
+      async function createAnimal() {
+        let species = document.getElementById("species").value;
+        let mass = document.getElementById("mass").value;
+        try {
+          let { data } = await axios.post("http://localhost:3000/api/animal/", {
+            species,
+            mass,
+          });
+          document.getElementById("displayAnimal").innerText =
+            JSON.stringify(data);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+
+      async function getChild() {
+        let index = document.getElementById("index").value;
+        let age = document.getElementById("age").value;
+        let gender = document.getElementById("gender").value;
+        let useOlderThan = document.getElementById("olderThanCheckbox").checked;
+
+        try {
+          if (useOlderThan) {
+            let { data } = await axios.get(
+              "http://localhost:3000/api/child/olderthan/" + age + "?gender=" + gender
+            );
+            document.getElementById("displayChild").innerText =
+              JSON.stringify(data);
+          } else {
+            let { data } = await axios.get(
+              "http://localhost:3000/api/child/" + index
+            );
+            document.getElementById("displayChild").innerText =
+              JSON.stringify(data);
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      }
+
+      async function getCharacter() {
+        
+        let id = document.getElementById("id").value;
+        id = Math.abs(parseInt(id));
+
+        if (isNaN(id) || id === 0) {
+          window.alert("You must provide a valid ID.");
+          return;
+        }
+        
+        try {
+          let { data } = await axios.get(
+            "http://localhost:3000/api/characters/?id=" +
+              id
+          );
+          document.getElementById("displayCharacter").innerHTML =
+            `<img src="${data.image}" alt="pic of character ${id}">`;  
+        } catch (error) {
+          window.alert(error);
+        }
+      }
+    </script>
+  </body>
+</html>

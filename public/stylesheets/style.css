@@ -1,0 +1,30 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+.formDiv {
+  border: 10px dashed gainsboro; 
+  padding: 20px; 
+  margin-bottom: 20px;
+}
+
+textarea {
+  width:50%; 
+  height:120px; 
+  margin-bottom:20px;
+}
+
+.resultsDiv > img {
+  float: right;
+  max-height: 100%;
+}
+
+.resultsDiv {
+  height: 200px;
+  margin-bottom: 20px;
+}
