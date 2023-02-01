@@ -71,20 +71,27 @@ router.get("/", async(req, res) => {
 
     // get proper values
     // may throw an error
-    const validatedValues = await onAnimal.validateSchema(queries, "GET");
+    const validatedValues = await onAnimal.validateSchema(queries, "find");
     console.log('\tValidated values:', validatedValues);
     
     // check db for these values    
     let dbResponse = await animalModel.findAnimalBy(validatedValues);
+    // if dbResponse isn't an array, make it an array with its old self as the first item
+    dbResponse = Array.isArray(dbResponse) ? dbResponse : [dbResponse];
     console.log("\tdbResponse", dbResponse);
 
-    if (!dbResponse || !dbResponse[0]) {
-      throw "No such animal";
+    if (!dbResponse[0]) {
+      throw new ResponseError('db', ["No such animal"]);
     } else {
       res.json(dbResponse);
     }
   } catch (error) {
-    res.send(error);
+    console.log(error);
+    if (error.details[0] == "No such animal") {
+      res.status(404).json(error);
+    } else {
+      res.status(400).json(error);
+    }
   }
 });
 
@@ -94,18 +101,22 @@ router.post("/", async(req, res) => {
     console.log("\tBody:", body);
     // get proper values
     // may throw an error
-    const validatedValues = await onAnimal.validateSchema(body, 'POST');
+    const validatedValues = await onAnimal.validateSchema(body, 'add new');
     console.log('\tValidated values:', validatedValues);
     // check db for the name from these values
     const animalData = await animalModel.findAnimalByName(validatedValues.name);
     console.log('\tanimalData (should be null):', animalData);
+    
     if (animalData) {
       // if found, throw an error
       throw new ResponseError("db", ["Name already exists."]);
-    } else {
-      // if not found, adding the animal
-      animalModel.addNewAnimal(validatedValues);
     }
+    
+    // not found, adding the animal
+    animalModel.addNewAnimal(validatedValues);
+
+    res.json({ msg:"Your animal was added" });
+    
   } catch (error) {
     console.log(error);
     res.status(400).json({ error });

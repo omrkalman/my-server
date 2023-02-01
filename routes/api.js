@@ -4,6 +4,7 @@ const listRouter = require("./api/child");
 const animalRouter = require("./api/animal");
 const characterRouter = require("./api/characters");
 const userRouter = require("./api/user");
+const productRouter = require("./api/product");
 
 //sub route
 // GET http://localhost:3000/api/
@@ -24,5 +25,7 @@ router.use("/animal", animalRouter);
 router.use("/characters", characterRouter);
 
 router.use("/user", userRouter);
+
+router.use("/product", productRouter);
 
 module.exports = router; //exports only router without need of object

@@ -18,7 +18,7 @@ router.post("/register", async (req, res)=>{
         console.log('\tValidated values:',validatedValues);
         // check db for the email from these values
         const userData = await userModel.findUserByEmail(validatedValues.email);
-        console.log('\tuserData:',userData);
+        console.log('\tuserData (null is good):',userData);
         if (userData) {
             // if found, throw an error
             throw new ResponseError("db", ["Email already exists."]);
@@ -27,8 +27,7 @@ router.post("/register", async (req, res)=>{
         //Encrypt password
         validatedValues.password = await bcrypt.createHash(validatedValues.password);
         userModel.addNewUser(validatedValues);
-
-        res.send("You have registered successfully.");
+        res.json({ msg: "You have registered successfully." });
     } catch(error) {
         console.log(error);
         res.status(400).json({ error });
@@ -46,12 +45,12 @@ router.post("/login", async(req,res)=>{
 
         const userData = await userModel.findUserByEmail(validatedValues.email);
         if (!userData) {
-            throw new ResponseError("db", ["Invalid email or password."]);
+            throw new ResponseError("db", ["Wrong email or password."]);
         }
 
         const isPasswordCorrect = await bcrypt.cmpHash(validatedValues.password, userData.password);
         if (!isPasswordCorrect) {
-            throw new ResponseError("db", ["Invalid email or password."]);
+            throw new ResponseError("db", ["Wrong email or password."]);
         }
 
         const token = await jwt.generateToken({ id: userData._id });

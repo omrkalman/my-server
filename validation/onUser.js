@@ -5,13 +5,14 @@ const schemaMap = new Map();
 
 schemaMap.set('register', 
     new Joi.object({
-        name: Joi.string().required().alphanum().min(2).max(20).trim(),
+        name: Joi.string().required().min(2).max(20).alphanum().trim(),
         email: Joi.string().required().email().trim(),
         password: Joi
             .string()
             .required()
-            .pattern
-            (new RegExp("^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*()_+]).{8,20}$"))
+            .pattern(
+                new RegExp("^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*()_+]).{8,20}$")
+            )
             .messages({
                 "string.pattern.base": "Password must include uppercase, lowercase, number, and special character. Length 8-20."
             }),
@@ -21,15 +22,14 @@ schemaMap.set('register',
 
 schemaMap.set('login', 
     new Joi.object({
-        email: Joi.string().required().email().min(5).max(255).trim(),
+        email: Joi.string().required().min(5).max(255).email().trim(),
         password: Joi
             .string()
             .required()
-            .regex(
+            .min(3).max(255)
+            .pattern(
                 new RegExp("^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$%^&*()_+]).{0,}$")
             )
-            .min(3)
-            .max(255)
             .messages({
                 "string.pattern.base": "password rules",
             }),

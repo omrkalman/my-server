@@ -1,54 +1,41 @@
 const Joi = require("joi");
 const validate = require("./validate");
 
-const animalSchemaPOST = Joi.object({
-    species: Joi
-        .string()   
-        .required()
-        .alphanum()
-        .min(2)
-        .max(42)
-        .trim()
-        .message("Species name mustn't exceed 42 letters."),
-    age: Joi
-        .number()
-        .integer()
-        .min(0)
-        .max(4543000000) //age of earth
-        .required(),
-    name: Joi
-        .string()
-        .required()
-        .alphanum()
-        .min(2)
-        .max(20)
-        .trim()
-        .message("Name mustn't exceed 20 letters.")
-});
+const schemaMap = new Map();
 
-const animalSchemaGET = Joi.object({
-    species: Joi
-        .string()   
-        .allow("")
-        .min(2)
-        .max(42)
-        .alphanum()
-        .trim()
+schemaMap.set('add new',
+    new Joi.object({
+    species: Joi.string()   
+        .required()
+        .min(2).max(42)
+        .alphanum().trim()
         .message("Species name mustn't exceed 42 letters."),
-    age: Joi
-        .number()
-        .allow("")
+    age: Joi.number()
+        .required()
         .integer()
-        .min(0)
-        .max(4543000000), //age of earth
-    name: Joi
-        .string()
-        .allow("")
-        .alphanum()
-        .min(2)
-        .max(20)
-        .trim()
-});
+        .min(0).max(4543000000), //age of earth
+    name: Joi.string()
+        .required()
+        .min(2).max(20)
+        .alphanum().trim()
+        .message("Name mustn't exceed 20 letters.")
+    })
+);
+
+schemaMap.set('find',
+    new Joi.object({
+    species: Joi.string()
+        .min(2).max(42)
+        .alphanum().trim()
+        .message("Species name mustn't exceed 42 letters."),
+    age: Joi.number()
+        .integer()
+        .min(0).max(4543000000), //age of earth
+    name: Joi.string()
+        .min(2).max(20)
+        .alphanum().trim()
+    })
+);
 
 /**
  * 
@@ -57,11 +44,7 @@ const animalSchemaGET = Joi.object({
  * @returns 
  */
 const validateSchema = (userInput, schema) => {
-    if (schema == 'GET') {
-        return validate(userInput, animalSchemaGET);
-    } else if (schema == 'POST') {
-        return validate(userInput, animalSchemaPOST);
-    }
+    return validate(userInput, schemaMap.get(schema));
 }
 
 module.exports = { validateSchema };

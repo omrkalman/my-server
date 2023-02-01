@@ -5,14 +5,14 @@ const Schema = mongoose.Schema;
 const productSchema = new Schema({
     name:       {type:String, required:true},
     price:      {type:Number, required:true},
-    desc:       {type:String, required:true},
+    desc:       {type:String},
     img:        {type:String}
 });
 
 const Product = mongoose.model("product", productSchema);
 
-const findProductAll = (s=0, l=10) => {
-    return Product.find().skip().limit();
+const findProductAll = (s=0, l=4) => {
+    return Product.find().skip(s).limit(l);
 }
 
 module.exports = {

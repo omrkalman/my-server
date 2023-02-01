@@ -18,8 +18,12 @@
         <input id="species" type="text" />
       </div>
       <div>
-        <label for="mass">Mass (kg): </label>
-        <input id="mass" type="number" />
+        <label for="animalAge">Age: </label>
+        <input id="animalAge" type="number" />
+      </div>
+      <div>
+        <label for="name">Name: </label>
+        <input id="name" type="text" />
       </div>
       <button onclick="getAnimal()">GET</button>
       <button onclick="createAnimal()">POST</button>
@@ -89,33 +93,40 @@
 
       async function getAnimal() {
         let species = document.getElementById("species").value;
-        let mass = document.getElementById("mass").value;
+        let age = document.getElementById("animalAge").value;
+        let name = document.getElementById("name").value;
+        let display = document.getElementById("displayAnimal");
         try {
           let { data } = await axios.get(
-            "http://localhost:3000/api/animal/?species=" +
-              species +
-              "&mass=" +
-              mass
+            "http://localhost:3000/api/animal/"+
+              "?species=" + species +
+              "&age=" + age +
+              "&name=" + name
           );
-          document.getElementById("displayAnimal").innerText =
-            JSON.stringify(data);
+          display.innerText =
+          JSON.stringify(data);
         } catch (error) {
-          console.log(error);
+          display.innerText =
+          JSON.stringify(error.response.data);
         }
       }
 
       async function createAnimal() {
         let species = document.getElementById("species").value;
-        let mass = document.getElementById("mass").value;
+        let age = document.getElementById("animalAge").value;
+        let name = document.getElementById("name").value;
+        let display = document.getElementById("displayAnimal");
         try {
           let { data } = await axios.post("http://localhost:3000/api/animal/", {
             species,
-            mass,
+            age,
+            name
           });
-          document.getElementById("displayAnimal").innerText =
-            JSON.stringify(data);
+          display.innerText =
+          JSON.stringify(data);
         } catch (error) {
-          console.log(error);
+          display.innerText =
+          JSON.stringify(error.response.data);
         }
       }
 
