@@ -11,7 +11,7 @@ const generateToken = (payload, exp = '30d') => {
 
 const verifyToken = (token) => {
     return new Promise((res, rej) => {
-        jwt.verify(token, SECRET, (err,payload) => {
+        jwt.verify(token, process.env.JWTSECRETKEY, (err,payload) => {
                 if (err) rej(err);
                 else res(payload);
             }

@@ -19,7 +19,7 @@
       </div>
       <div>
         <label for="animalAge">Age: </label>
-        <input id="animalAge" type="number" />
+        <input class="shortInput" id="animalAge" type="number" />
       </div>
       <div>
         <label for="name">Name: </label>
@@ -36,7 +36,7 @@
       <h2>Child</h2>
       <div>
         <label for="index">Index: </label>
-        <input id="index" type="number" />
+        <input class="shortInput" id="index" type="number" />
       </div>
       <div>
         <label for="olderThanCheckbox"
@@ -50,7 +50,7 @@
       </div>
       <div>
         <label for="age">Age: </label>
-        <input disabled id="age" type="number" />
+        <input disabled class="shortInput" id="age" type="number" />
       </div>
       <div>
         <label for="gender">Gender: </label>
@@ -70,11 +70,49 @@
       <h2>Character</h2>
       <div>
         <label for="id">ID: </label>
-        <input id="id" type="number" />
+        <input class="shortInput" id="id" type="number" />
       </div>
       <button onclick="getCharacter()">GET</button>
     </div>
     <div class="resultsDiv" id="displayCharacter"></div>
+    <div
+      class="formDiv"
+      id="product"
+    >
+      <h2>Product</h2>
+      <div>
+        <div id="productGET">
+          <h4>Look at Products</h4>  
+          <input class="shortInput" id="pageNumInput" required size="1" maxlength="3" type="number" value="1" />
+          / <input class="shortInput" id="perPageInput" required size="1" maxlength="3" type="number" value="3" />
+          <div><button onclick="getPreviousProductPage()">Previous</button><button onclick="getNextProductPage()">Next</button></div>
+          <div>
+            <button onclick="getProduct()">Show</button>
+          </div>
+        </div>
+        <div id="productPOST">
+          <h4>Add a Product!</h4>
+          <form action="http://localhost:3000/api/product" method="post" enctype="multipart/form-data">
+            <div>
+              <input required type="text" name="name" placeholder="name" />
+            </div>
+            <div>
+              <input required type="number" name="price" placeholder="price" />
+            </div>
+            <div>
+              <input type="text" name="desc" placeholder="description" />
+            </div>
+            <div>
+              <input type="file" name="avatar" />
+            </div>
+            <div>
+              <button type="submit">Upload</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="resultsDiv" id="displayProduct"></div>
 
     <script>
       function toggleChildMode(event) {
@@ -175,6 +213,60 @@
         } catch (error) {
           window.alert(error);
         }
+      }
+
+      async function getProduct() {
+        const pageNum = document.getElementById('pageNumInput').value;
+        const perPage = document.getElementById('perPageInput').value;
+        try {
+          let { data } = await axios.get(`http://localhost:3000/api/product/${pageNum}/${perPage}`);
+          console.log("data", data);
+          let htmlContent = ``;
+          for (let item of data) {
+            htmlContent += 
+              `
+              <div class="card">
+                <div>
+                  <img src="http://localhost:3000/uploads/${item.img}" alt="image of product">
+                </div>
+                <h4>${item.name}</h4> 
+                <h4>$${item.price}</h4>
+                <p>${item.desc}</p>
+                <button id=${item._id}>Delete</button>
+              </div>  
+              `;
+          }
+          document.getElementById('displayProduct').innerHTML=htmlContent;
+
+          for (let item of data) {
+            document.getElementById(item._id).addEventListener('click',async(event)=>{
+              try {
+                await axios.delete(
+                  `http://localhost:3000/api/product/${event.target.id}`
+                );
+                location.reload();
+              } catch(error) {
+                console.log(error);
+              }
+            })
+          }
+        } catch(error) {
+          console.log(error);
+        }
+      }
+
+      function getPreviousProductPage() {
+        const pageNum = document.getElementById('pageNumInput');
+        if (pageNum.value > 1) {
+          pageNum.value = parseInt(pageNum.value)-1;  
+          getProduct();
+        }
+      }
+
+      function getNextProductPage() {
+        const pageNum = document.getElementById('pageNumInput');
+        pageNum.value = parseInt(pageNum.value)+1;
+        getProduct();
       }
     </script>
   </body>

@@ -28,3 +28,31 @@ textarea {
   height: 200px;
   margin-bottom: 20px;
 }
+
+#displayProduct {
+  display: grid;
+  gap: 5px;
+  grid-template-columns: auto auto auto;
+}
+
+.card {
+  border: 3px solid gainsboro;
+}
+
+.card img {
+  max-width: 200px;
+  max-height: 200px;
+}
+
+#product > div {
+  display: flex;
+  justify-content: space-between;
+}
+
+#product > div > div {
+  margin: 0 auto;
+}
+
+.shortInput {
+  width: 45px;
+}

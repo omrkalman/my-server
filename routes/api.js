@@ -5,6 +5,7 @@ const animalRouter = require("./api/animal");
 const characterRouter = require("./api/characters");
 const userRouter = require("./api/user");
 const productRouter = require("./api/product");
+const authMW = require("../middleware/auth");
 
 //sub route
 // GET http://localhost:3000/api/
@@ -26,6 +27,9 @@ router.use("/characters", characterRouter);
 
 router.use("/user", userRouter);
 
+// Protected resource:
+// Passing through middleware
+// router.use("/product", authMW, productRouter);
 router.use("/product", productRouter);
 
 module.exports = router; //exports only router without need of object
