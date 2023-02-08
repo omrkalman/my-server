@@ -19,6 +19,7 @@ schemaMap.set('add new',
             .message("Name mustn't exceed 40 letters."),
         price: Joi.number().required().min(0.01),
         desc: Joi.string()
+            .allow("")
             .max(100)
             .trim()
             .message("Description mustn't exceed 100 letters.")

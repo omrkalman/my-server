@@ -226,13 +226,15 @@
             htmlContent += 
               `
               <div class="card">
-                <div>
+                <div class="card-image">
                   <img src="http://localhost:3000/uploads/${item.img}" alt="image of product">
                 </div>
-                <h4>${item.name}</h4> 
-                <h4>$${item.price}</h4>
-                <p>${item.desc}</p>
-                <button id=${item._id}>Delete</button>
+                <div class="card-details">
+                  <h4>${item.name}</h4> 
+                  <h4>$${item.price}</h4>
+                  <p>${item.desc}</p>
+                  <button id=${item._id}>Delete</button>
+                </div>
               </div>  
               `;
           }

@@ -1,6 +1,6 @@
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  padding: 5vw;
+  font: "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
 a {
@@ -32,16 +32,54 @@ textarea {
 #displayProduct {
   display: grid;
   gap: 5px;
-  grid-template-columns: auto auto auto;
+  grid-template-columns: auto;
+
+}
+
+@media screen and (min-width: 500px) {
+  #displayProduct{  
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media screen and (min-width: 900px) {
+  #displayProduct{  
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  #displayProduct{  
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
 }
 
 .card {
   border: 3px solid gainsboro;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .card img {
-  max-width: 200px;
-  max-height: 200px;
+  max-width: 100%;
+}
+
+.card-details {
+  padding: 5px;
+}
+
+.card-details * {
+  margin: 5px 0 0 0;
+  padding: 0;
+}
+
+.card-details h4 {
+  text-align: center;
+}
+
+.card-details button {
+  width: 100%;
 }
 
 #product > div {
